@@ -1,0 +1,53 @@
+version: '3'
+networks:
+  bom_appetite:
+    driver: bridge
+
+services:
+  front_bom_appetite:
+    container_name: bom_appetite
+    entrypoint: sh ./.docker/entrypoint.sh
+    build:
+      context: ./front_bomappetite
+    volumes:
+      - ./front_bomappetite:/home/project/app
+    ports:
+      - "3002:3002"
+    depends_on:
+      - api_bomappetite
+    networks:
+      - bom_appetite
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  api_bomappetite:
+    build:
+      context: ./api_bomappetite
+    entrypoint: sh ./.docker/entrypoint.sh
+    container_name: api_bomappetite
+    ports:
+      - 3003:3003
+      - 3005:3005
+    restart: always
+    volumes:
+      - ./api_bomappetite:/home/project_app/api
+    tty: true
+    networks:
+      - bom_appetite
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db:
+    image: mongo:4.4
+    container_name: db
+    ports:
+      - 27017:27017
+    volumes:
+      - /mongodb/dbdata:/data/db
+      - /mongodb/configdb:/data/configdb
+    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: bomappetite-database
+    networks:
+      - bom_appetite
