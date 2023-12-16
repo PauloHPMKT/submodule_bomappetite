@@ -1,3 +1,6 @@
 [submodule "api_bomappetite"]
 	path = api_bomappetite
 	url = git@github.com:PauloHPMKT/api_bomappetite.git
+[submodule "front_bomappetite"]
+	path = front_bomappetite
+	url = git@github.com:PauloHPMKT/front_bomappetite.git
